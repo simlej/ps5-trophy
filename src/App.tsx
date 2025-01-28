@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react"
 import html2canvas from "html2canvas"
 import { DownloadIcon } from "lucide-react"
 import { useReducer, useRef } from "react"
@@ -102,6 +103,7 @@ function App() {
           <p>Made with 🎮 by <a href="https://www.simlej.dev/" target="_blank" rel="noreferrer">Simlej</a></p>
         </div>
       </div>
+      <Analytics />
     </div>
   )
 }
