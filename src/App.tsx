@@ -52,15 +52,15 @@ function App() {
         </div>
         <div ref={toDownloadRef} className="flex items-center justify-center p-10 bg-transparent">
           <div className="w-96 h-20 bg-gradient-to-r from-[#323234] to-[#1F1F1F] rounded-lg p-4 flex items-center gap-4">
-            <div className="w-12 h-12">
+            <div className="w-12 h-12 shrink-0">
               <img src={state.image || '/default.jpg'} alt="avatar" className="w-full h-full" />
             </div>
             <div className="font-extralight">
               <div className="flex items-start gap-2">
                 <img src={`/${state.trophy}.png`} alt="avatar" className="h-5 translate-y-[2px]" />
-                <span className="text-lg text-[#F3F3F3] p-0">{state.title}</span>
+                <span className="text-lg text-[#F3F3F3] truncate max-w-64">{state.title}</span>
               </div>
-              <span className="text-sm text-[#A2A2A2]">{state.description}</span>
+              <p className="text-sm text-[#A2A2A2] truncate max-w-72">{state.description}</p>
             </div>
           </div>
         </div>
