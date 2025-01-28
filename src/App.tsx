@@ -42,8 +42,8 @@ function App() {
   }
 
   return (
-    <div className='w-full h-screen flex'>
-      <div className='w-2/3 flex items-center justify-center relative'>
+    <div className='w-full md:h-screen flex flex-col md:flex-row'>
+      <div className='w-full min-h-72 md:min-h-full md:w-2/3 flex items-center justify-center relative'>
         <div className="absolute left-0 right-0 bottom-0 flex items-center justify-center py-4">
           <Button onClick={() => download()}>
             <DownloadIcon />
@@ -65,7 +65,7 @@ function App() {
           </div>
         </div>
       </div>
-      <div className='w-1/3 bg-primary-foreground p-4 flex flex-col justify-between'>
+      <div className='w-full md:w-1/3 bg-primary-foreground p-4 flex flex-col justify-between'>
         <div className="flex flex-col gap-4">
           <h1 className="text-xl font-bold">PS5 Trophy generator</h1>
           <div>
@@ -98,7 +98,7 @@ function App() {
             </ToggleGroup>
           </div>
         </div>
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-end mt-8">
           <p>Made with 🎮 by <a href="https://www.simlej.dev/" target="_blank" rel="noreferrer">Simlej</a></p>
         </div>
       </div>
