@@ -1,12 +1,14 @@
 import { Analytics } from "@vercel/analytics/react"
 import html2canvas from "html2canvas"
-import { DownloadIcon } from "lucide-react"
-import { useReducer, useRef } from "react"
+import { CopyIcon, DownloadIcon } from "lucide-react"
+import { useEffect, useReducer, useRef } from "react"
 import { Button } from "./components/ui/button"
 import { Input } from "./components/ui/input"
 import { Label } from "./components/ui/label"
 import { Textarea } from "./components/ui/textarea"
+import { Toaster } from "./components/ui/toaster"
 import { ToggleGroup, ToggleGroupItem } from "./components/ui/toggle-group"
+import { useToast } from "./hooks/use-toast"
 import { formReducer, FormState } from "./lib/form-reducer"
 
 function App() {
@@ -14,6 +16,7 @@ function App() {
   const [state, dispatch] = useReducer(formReducer, { title: "Be yourself", description: "Trophy earned !", image: "", trophy: "gold" });
 
   const toDownloadRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -42,13 +45,56 @@ function App() {
     }
   }
 
+  const copy = () => {
+    const node = toDownloadRef.current;
+    if (node) {
+      html2canvas(node, { backgroundColor: null, scale: 4 }).then(canvas => {
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const clipboardItemInput = new ClipboardItem({ 'image/png': blob })
+            navigator.clipboard.write([clipboardItemInput])
+            toast({
+              title: 'Copied to clipboard',
+              description: 'Trophy image copied to clipboard',
+            });
+          }
+        }, 'image/png');
+
+      })
+    }
+  }
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    // Check if Ctrl (or Cmd on Mac) and C are pressed
+    if ((event.ctrlKey || event.metaKey) && event.key === 'c') {
+      event.preventDefault(); // Prevent the default copy action
+      copy();
+    }
+  };
+
+  // Use effect to add the event listener
+  useEffect(() => {
+    // Add event listener for keydown
+    document.addEventListener('keydown', handleKeyDown);
+
+    // Cleanup function to remove the event listener
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   return (
     <div className='w-full md:h-screen flex flex-col md:flex-row'>
       <div className='w-full min-h-72 md:min-h-full md:w-2/3 flex items-center justify-center relative'>
-        <div className="absolute left-0 right-0 bottom-0 flex items-center justify-center py-4">
+        <div className="absolute left-0 right-0 bottom-0 flex items-center justify-center gap-4 py-4">
           <Button onClick={() => download()}>
             <DownloadIcon />
             <span>Download</span>
+          </Button>
+          <Button onClick={() => copy()}>
+            <CopyIcon />
+            <span>Copy</span>
+            <span className="ml-auto text-xs tracking-widest text-muted-foreground">⌘+C</span>
           </Button>
         </div>
         <div ref={toDownloadRef} className="flex items-center justify-center p-10 bg-transparent">
@@ -103,6 +149,7 @@ function App() {
           <p>Made with 🎮 by <a href="https://www.simlej.dev/" target="_blank" rel="noreferrer">Simlej</a></p>
         </div>
       </div>
+      <Toaster />
       <Analytics />
     </div>
   )
